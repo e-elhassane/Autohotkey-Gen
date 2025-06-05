@@ -1,0 +1,135 @@
+RP2040 Key Mapping Guide
+====================
+
+This guide provides unique complex key combinations for each physical key.
+These combinations are unlikely to conflict with regular software shortcuts.
+Format: Physical Key -> Complex Combination
+
+Number Row
+----------
+1 -> Ctrl+Alt+Shift+1
+2 -> Ctrl+Alt+Shift+2
+3 -> Ctrl+Alt+Shift+3
+4 -> Ctrl+Alt+Shift+4
+5 -> Ctrl+Alt+Shift+5
+6 -> Ctrl+Alt+Shift+6
+7 -> Ctrl+Alt+Shift+7
+8 -> Ctrl+Alt+Shift+8
+9 -> Ctrl+Alt+Shift+9
+0 -> Ctrl+Alt+Shift+0
+- -> Ctrl+Alt+Shift+-
+= -> Ctrl+Alt+Shift+=
+
+Function Row
+-----------
+F1 -> Ctrl+Alt+Shift+F1
+F2 -> Ctrl+Alt+Shift+F2
+F3 -> Ctrl+Alt+Shift+F3
+F4 -> Ctrl+Alt+Shift+F4
+F5 -> Ctrl+Alt+Shift+F5
+F6 -> Ctrl+Alt+Shift+F6
+F7 -> Ctrl+Alt+Shift+F7
+F8 -> Ctrl+Alt+Shift+F8
+F9 -> Ctrl+Alt+Shift+F9
+F10 -> Ctrl+Alt+Shift+F10
+F11 -> Ctrl+Alt+Shift+F11
+F12 -> Ctrl+Alt+Shift+F12
+
+Letter Keys (QWERTY)
+-------------------
+Q -> Ctrl+Alt+Shift+Q
+W -> Ctrl+Alt+Shift+W
+E -> Ctrl+Alt+Shift+E
+R -> Ctrl+Alt+Shift+R
+T -> Ctrl+Alt+Shift+T
+Y -> Ctrl+Alt+Shift+Y
+U -> Ctrl+Alt+Shift+U
+I -> Ctrl+Alt+Shift+I
+O -> Ctrl+Alt+Shift+O
+P -> Ctrl+Alt+Shift+P
+[ -> Ctrl+Alt+Shift+[
+] -> Ctrl+Alt+Shift+]
+\ -> Ctrl+Alt+Shift+\
+
+ASDF Row
+--------
+A -> Ctrl+Alt+Shift+A
+S -> Ctrl+Alt+Shift+S
+D -> Ctrl+Alt+Shift+D
+F -> Ctrl+Alt+Shift+F
+G -> Ctrl+Alt+Shift+G
+H -> Ctrl+Alt+Shift+H
+J -> Ctrl+Alt+Shift+J
+K -> Ctrl+Alt+Shift+K
+L -> Ctrl+Alt+Shift+L
+; -> Ctrl+Alt+Shift+;
+' -> Ctrl+Alt+Shift+'
+
+ZXCV Row
+--------
+Z -> Ctrl+Alt+Shift+Z
+X -> Ctrl+Alt+Shift+X
+C -> Ctrl+Alt+Shift+C
+V -> Ctrl+Alt+Shift+V
+B -> Ctrl+Alt+Shift+B
+N -> Ctrl+Alt+Shift+N
+M -> Ctrl+Alt+Shift+M
+, -> Ctrl+Alt+Shift+,
+. -> Ctrl+Alt+Shift+.
+/ -> Ctrl+Alt+Shift+/
+
+Special Keys
+-----------
+Space -> Ctrl+Alt+Shift+Space
+Tab -> Ctrl+Alt+Shift+Tab
+CapsLock -> Ctrl+Alt+Shift+CapsLock
+Enter -> Ctrl+Alt+Shift+Enter
+Backspace -> Ctrl+Alt+Shift+Backspace
+Delete -> Ctrl+Alt+Shift+Delete
+Escape -> Ctrl+Alt+Shift+Escape
+
+Arrow Keys
+---------
+Up -> Ctrl+Alt+Shift+Up
+Down -> Ctrl+Alt+Shift+Down
+Left -> Ctrl+Alt+Shift+Left
+Right -> Ctrl+Alt+Shift+Right
+
+Numpad
+------
+Num0 -> Ctrl+Alt+Shift+Num0
+Num1 -> Ctrl+Alt+Shift+Num1
+Num2 -> Ctrl+Alt+Shift+Num2
+Num3 -> Ctrl+Alt+Shift+Num3
+Num4 -> Ctrl+Alt+Shift+Num4
+Num5 -> Ctrl+Alt+Shift+Num5
+Num6 -> Ctrl+Alt+Shift+Num6
+Num7 -> Ctrl+Alt+Shift+Num7
+Num8 -> Ctrl+Alt+Shift+Num8
+Num9 -> Ctrl+Alt+Shift+Num9
+NumDot -> Ctrl+Alt+Shift+NumDot
+NumPlus -> Ctrl+Alt+Shift+NumPlus
+NumMinus -> Ctrl+Alt+Shift+NumMinus
+NumMultiply -> Ctrl+Alt+Shift+NumMultiply
+NumDivide -> Ctrl+Alt+Shift+NumDivide
+NumEnter -> Ctrl+Alt+Shift+NumEnter
+
+Implementation Notes
+------------------
+1. These combinations use Ctrl+Alt+Shift as the base modifier combination
+2. Each physical key on the second keyboard should send its corresponding combination
+3. This ensures no conflicts with regular keyboard shortcuts
+4. The AHK generator is already configured to work with these combinations
+
+Example RP2040 Implementation (pseudocode):
+-----------------------------------------
+when_key_pressed(key):
+    if is_second_keyboard:
+        send_keys(CTRL + ALT + SHIFT + key)
+    else:
+        send_key(key)
+
+This way:
+- Main keyboard works normally
+- Second keyboard sends complex combinations
+- AHK script can distinguish between keyboards 
