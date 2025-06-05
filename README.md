@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # AutoHotkey Macro Generator
 
 A modern React application for creating and managing AutoHotkey macros with a user-friendly interface. This tool allows users to record keyboard shortcuts and assign various actions to them.
@@ -120,3 +121,7 @@ Feel free to contribute to this project by:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+=======
+# AHK-Macro-Generator
+ modern React application for creating and managing AutoHotkey macros with a user-friendly interface. This tool allows users to record keyboard shortcuts and assign various actions to them.
+>>>>>>> efd68df606eb12d7cda3457624484f61795d9ea7
