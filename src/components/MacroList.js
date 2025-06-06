@@ -175,8 +175,6 @@ SetWorkingDir %A_ScriptDir%
 ; Initialize custom AI menu
 Menu, AI_Menu, Add, Open ChatGPT, OpenChatGPT
 Menu, AI_Menu, Add, Ask GPT (Prompt), PromptGPT
-Menu, AI_Menu, Add  ; Separator
-Menu, AI_Menu, Add, Exit, HandleExit
 return  ; End of auto-execute section
 
 ; Function for clipboard history
