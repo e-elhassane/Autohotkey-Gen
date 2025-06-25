@@ -1,3 +1,8 @@
+// =====================================
+// Composant d'enregistrement de raccourcis clavier (KeyRecorder)
+// Permet à l'utilisateur d'enregistrer une combinaison de touches et d'associer une action
+// =====================================
+
 import React, { useState, useEffect } from 'react';
 import {
   Paper,
@@ -23,54 +28,65 @@ import Tooltip from '@mui/material/Tooltip';
 import { useLanguage } from '../contexts/LanguageContext';
 import MouseIcon from '@mui/icons-material/Mouse';
 
+// =============================
+// Définition du composant principal
+// =============================
 function KeyRecorder({ onAddHotkey }) {
+  // Gestion de la langue
   const { t } = useLanguage();
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordedKeys, setRecordedKeys] = useState([]);
-  const [isActionDialogOpen, setIsActionDialogOpen] = useState(false);
-  const [selectedAction, setSelectedAction] = useState('');
-  const [actionPath, setActionPath] = useState('');
-  const [replacementText, setReplacementText] = useState('');
-  const [textToReplace, setTextToReplace] = useState('');
-  const [hotkeyName, setHotkeyName] = useState('');
+  // États pour la gestion de l'enregistrement et des champs du formulaire
+  const [isRecording, setIsRecording] = useState(false); // Enregistrement en cours ?
+  const [recordedKeys, setRecordedKeys] = useState([]); // Touches enregistrées
+  const [isActionDialogOpen, setIsActionDialogOpen] = useState(false); // Dialogue d'action ouvert ?
+  const [selectedAction, setSelectedAction] = useState(''); // Action sélectionnée
+  const [actionPath, setActionPath] = useState(''); // Chemin ou paramètre de l'action
+  const [replacementText, setReplacementText] = useState(''); // Texte de remplacement
+  const [textToReplace, setTextToReplace] = useState(''); // Texte à remplacer
+  const [hotkeyName, setHotkeyName] = useState(''); // Nom de la macro
 
-  const pathRequiredActions = ['openApp', 'openWebsite', 'sendKeys'];
+  // Actions nécessitant un chemin/paramètre
+  const pathRequiredActions = ['openApp', 'openWebsite'];
 
+  // =============================
+  // Effet pour enregistrer les touches clavier
+  // =============================
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!isRecording) return;
-      
+      // Empêche le comportement par défaut du navigateur
       e.preventDefault();
       const key = e.key.toUpperCase();
       const modifiers = [];
-      
-      // Add any pressed modifier keys
+      // Ajout des modificateurs
       if (e.ctrlKey && key !== 'CONTROL') modifiers.push('Ctrl');
       if (e.altKey && key !== 'ALT') modifiers.push('Alt');
       if (e.shiftKey && key !== 'SHIFT') modifiers.push('Shift');
       if (e.metaKey && key !== 'META') modifiers.push('Win');
-      
-      // Show the actual key pressed
+      // Affichage de la touche pressée
       const displayKey = key === 'CONTROL' || key === 'ALT' || key === 'SHIFT' || key === 'META' 
         ? key 
         : `${key} (${e.code})`;
-      
       setRecordedKeys([...modifiers, displayKey]);
     };
-
+    // Ajout/suppression de l'écouteur d'événement
     if (isRecording) {
       window.addEventListener('keydown', handleKeyDown);
     }
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isRecording]);
 
+  // =============================
+  // Démarrer l'enregistrement
+  // =============================
   const handleStartRecording = () => {
     setIsRecording(true);
   };
 
+  // =============================
+  // Arrêter l'enregistrement
+  // =============================
   const handleStopRecording = () => {
     setIsRecording(false);
     if (recordedKeys.length > 0) {
@@ -78,12 +94,14 @@ function KeyRecorder({ onAddHotkey }) {
     }
   };
 
+  // =============================
+  // Sauvegarder la macro créée
+  // =============================
   const handleSaveHotkey = () => {
     let hotkey;
-    
+    // Cas remplacement de texte
     if (selectedAction === 'replaceText') {
       if (!textToReplace || !replacementText) return;
-      
       hotkey = {
         name: hotkeyName,
         keys: recordedKeys,
@@ -95,7 +113,6 @@ function KeyRecorder({ onAddHotkey }) {
       };
     } else {
       if (recordedKeys.length === 0) return;
-      
       hotkey = {
         name: hotkeyName,
         keys: recordedKeys,
@@ -105,10 +122,9 @@ function KeyRecorder({ onAddHotkey }) {
         }
       };
     }
-
+    // Ajout de la macro à la liste
     onAddHotkey(hotkey);
-    
-    // Reset everything
+    // Réinitialisation des champs
     setIsActionDialogOpen(false);
     setSelectedAction('');
     setActionPath('');
@@ -118,6 +134,9 @@ function KeyRecorder({ onAddHotkey }) {
     setRecordedKeys([]);
   };
 
+  // =============================
+  // Rendu du formulaire d'enregistrement de macro
+  // =============================
   return (
     <Paper 
       elevation={3} 
@@ -130,6 +149,7 @@ function KeyRecorder({ onAddHotkey }) {
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {/* Sélection du type d'action */}
         <FormControl fullWidth>
           <InputLabel>{t('actionType')}</InputLabel>
           <Select
@@ -144,7 +164,6 @@ function KeyRecorder({ onAddHotkey }) {
           >
             <MenuItem value="openApp">{t('actionTypes.openApp')}</MenuItem>
             <MenuItem value="openWebsite">{t('actionTypes.openWebsite')}</MenuItem>
-            <MenuItem value="sendKeys">{t('actionTypes.sendKeys')}</MenuItem>
             <MenuItem value="replaceText">{t('actionTypes.replaceText')}</MenuItem>
             <MenuItem value="volumeUp">{t('actionTypes.volumeUp')}</MenuItem>
             <MenuItem value="volumeDown">{t('actionTypes.volumeDown')}</MenuItem>
@@ -157,6 +176,7 @@ function KeyRecorder({ onAddHotkey }) {
           </Select>
         </FormControl>
 
+        {/* Bloc d'enregistrement des touches */}
         {selectedAction && (
           <Box sx={{ textAlign: 'center' }}>
             {isRecording ? (
@@ -187,7 +207,7 @@ function KeyRecorder({ onAddHotkey }) {
                     boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                   }}
                 >
-                  {t('clearKeys')}
+                  {t('saveKey')}
                 </Button>
               </Box>
             ) : (
@@ -213,6 +233,7 @@ function KeyRecorder({ onAddHotkey }) {
           </Box>
         )}
 
+        {/* Affichage des touches enregistrées */}
         {recordedKeys.length > 0 && selectedAction !== 'replaceText' && (
           <Paper 
             sx={{ 
@@ -230,6 +251,7 @@ function KeyRecorder({ onAddHotkey }) {
         )}
       </Box>
 
+      {/* Dialogue de configuration de l'action */}
       <Dialog 
         open={isActionDialogOpen} 
         onClose={() => setIsActionDialogOpen(false)}
@@ -246,15 +268,15 @@ function KeyRecorder({ onAddHotkey }) {
               onChange={(e) => setHotkeyName(e.target.value)}
               placeholder={t('macroNamePlaceholder')}
             />
-            
+            {/* Champs spécifiques selon l'action choisie */}
             {selectedAction === 'replaceText' ? (
               <>
                 <TextField
-                  label={t('path')}
+                  label={t('textToReplace')}
                   fullWidth
                   value={textToReplace}
                   onChange={(e) => setTextToReplace(e.target.value)}
-                  placeholder={t('pathPlaceholder')}
+                  placeholder={t('textToReplacePlaceholder')}
                 />
                 <TextField
                   label={t('replacement')}

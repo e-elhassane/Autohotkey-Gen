@@ -20,12 +20,14 @@ export const translations = {
     replacementPlaceholder: 'Enter replacement text...',
     save: 'Save Macro',
     cancel: 'Cancel',
+    textToReplace: 'Text to replace',
+    textToReplacePlaceholder: 'Enter the text you want to replace...',
+    saveKey: 'Save Key',
 
     // Action Types
     actionTypes: {
       openApp: 'Open Application',
       openWebsite: 'Open Website',
-      sendKeys: 'Send Keys',
       runCommand: 'Run Command',
       replaceText: 'Replace Text',
       volumeUp: 'Volume Up',
@@ -56,7 +58,6 @@ export const translations = {
     actions: {
       openApp: 'Open application',
       openWebsite: 'Open website',
-      sendKeys: 'Send keys',
       runCommand: 'Run command',
       replaceText: 'Replace text',
       volumeUp: 'Increase system volume',
@@ -91,6 +92,58 @@ export const translations = {
       clearKeys: 'Clear recorded keys',
       recordKeys: 'Click to record keys',
       stopRecording: 'Click to stop recording'
+    },
+
+    // Navigation
+    navigation: {
+      macroGenerator: 'Macro Generator',
+      secondKeyboard: 'Second Keyboard'
+    },
+
+    // Second Keyboard Page
+    secondKeyboard: {
+      title: 'Second Keyboard Setup',
+      subtitle: 'Transform any USB keyboard into a powerful macro keyboard using HID Remapper',
+      openConfig: 'Open HID Remapper Config',
+      whatIsHID: 'What is HID Remapper?',
+      whatIsHIDDesc: "It's an open-source firmware that allows you to remap any USB HID device (keyboard, mouse, gamepad) to send different inputs. Perfect for creating a dedicated macro keyboard!",
+      setupGuide: 'Setup Guide',
+      proTips: 'Pro Tips',
+      importantNotes: 'Important Notes',
+      steps: {
+        step1: {
+          title: '1. Download HID Remapper',
+          description: 'Download the HID Remapper firmware from the official website.',
+          linkText: 'Download HID Remapper'
+        },
+        step2: {
+          title: '2. Flash Your Device',
+          description: 'Flash the HID Remapper firmware to your compatible device (Arduino Pro Micro, etc.).',
+          linkText: 'Flashing Guide'
+        },
+        step3: {
+          title: '3. Configure Mappings',
+          description: 'Use the HID Remapper configuration tool to set up your key mappings.',
+          linkText: 'Open Config Tool'
+        },
+        step4: {
+          title: '4. Test Your Setup',
+          description: 'Test your second keyboard to ensure all mappings work correctly.'
+        }
+      },
+      tips: [
+        'Use a mechanical keyboard for better tactile feedback',
+        'Consider using different colored keycaps for your second keyboard',
+        'Start with simple mappings and gradually add complexity',
+        'Keep a backup of your configuration',
+        'Use layers to organize different sets of mappings'
+      ],
+      notes: [
+        'HID Remapper requires a compatible microcontroller (Arduino Pro Micro, Leonardo, etc.)',
+        'The device will appear as a new keyboard/mouse to your computer',
+        'You can have multiple layers of mappings for different use cases',
+        'For advanced users, you can create custom expressions and macros'
+      ]
     }
   },
   fr: {
@@ -114,12 +167,14 @@ export const translations = {
     replacementPlaceholder: 'Entrez le texte de remplacement...',
     save: 'Enregistrer la macro',
     cancel: 'Annuler',
+    textToReplace: 'Texte à remplacer',
+    textToReplacePlaceholder: 'Entrez le texte que vous souhaitez remplacer...',
+    saveKey: 'Enregistrer la touche',
 
     // Action Types
     actionTypes: {
       openApp: 'Ouvrir une application',
       openWebsite: 'Ouvrir un site web',
-      sendKeys: 'Envoyer des touches',
       runCommand: 'Exécuter une commande',
       replaceText: 'Remplacer du texte',
       volumeUp: 'Augmenter le volume',
@@ -132,7 +187,10 @@ export const translations = {
       activateChrome: 'Activer Chrome',
       startTimer: 'Démarrer un minuteur',
       clipboardHistory: 'Historique du presse-papiers',
-      aiMenu: 'Menu Assistant IA'
+      aiMenu: 'Menu Assistant IA',
+      mouseClick: 'Click at position',
+      mouseMove: 'Move cursor to position',
+      mouseDrag: 'Drag from start to end position'
     },
 
     // Macro List
@@ -147,7 +205,6 @@ export const translations = {
     actions: {
       openApp: 'Ouvrir l\'application',
       openWebsite: 'Ouvrir le site web',
-      sendKeys: 'Envoyer des touches',
       runCommand: 'Exécuter la commande',
       replaceText: 'Remplacer le texte',
       volumeUp: 'Augmenter le volume système',
@@ -161,6 +218,9 @@ export const translations = {
       startTimer: 'Démarrer un minuteur',
       clipboardHistory: 'Sauvegarder dans l\'historique du presse-papiers',
       aiMenu: 'Ouvrir le Menu Assistant IA',
+      mouseClick: 'Click at position',
+      mouseMove: 'Move cursor to position',
+      mouseDrag: 'Drag from start to end position',
       unknown: 'Action inconnue'
     },
 
@@ -179,6 +239,58 @@ export const translations = {
       clearKeys: 'Effacer les touches enregistrées',
       recordKeys: 'Cliquez pour enregistrer les touches',
       stopRecording: 'Cliquez pour arrêter l\'enregistrement'
+    },
+
+    // Navigation
+    navigation: {
+      macroGenerator: 'Générateur de Macros AHK',
+      secondKeyboard: 'Clavier Secondaire'
+    },
+
+    // Second Keyboard Page
+    secondKeyboard: {
+      title: 'Configuration du Clavier Secondaire',
+      subtitle: 'Transformez n\'importe quel clavier USB en un puissant clavier de macros avec HID Remapper',
+      openConfig: 'Ouvrir la Configuration HID Remapper',
+      whatIsHID: 'Qu\'est-ce que HID Remapper ?',
+      whatIsHIDDesc: 'C\'est un firmware open-source qui vous permet de remapper n\'importe quel périphérique USB HID (clavier, souris, manette) pour envoyer des entrées différentes. Parfait pour créer un clavier de macros dédié !',
+      setupGuide: 'Guide d\'Installation',
+      proTips: 'Conseils Pro',
+      importantNotes: 'Notes Importantes',
+      steps: {
+        step1: {
+          title: '1. Télécharger HID Remapper',
+          description: 'Télécharger le firmware HID Remapper depuis le site officiel.',
+          linkText: 'Télécharger HID Remapper'
+        },
+        step2: {
+          title: '2. Flasher Votre Appareil',
+          description: 'Flasher le firmware HID Remapper sur votre appareil compatible (Arduino Pro Micro, etc.).',
+          linkText: 'Guide de Flashing'
+        },
+        step3: {
+          title: '3. Configurer les Mappages',
+          description: 'Utiliser l\'outil de configuration HID Remapper pour configurer vos mappages de touches.',
+          linkText: 'Ouvrir l\'Outil de Configuration'
+        },
+        step4: {
+          title: '4. Tester Votre Configuration',
+          description: 'Tester votre second clavier pour s\'assurer que tous les mappages fonctionnent correctement.'
+        }
+      },
+      tips: [
+        'Utiliser un clavier mécanique pour une meilleure réaction tactile',
+        'Considérer l\'utilisation de différentes couleurs de touches pour votre second clavier',
+        'Commencer avec des mappages simples et ajouter progressivement de la complexité',
+        'Garder une copie de votre configuration',
+        'Utiliser des couches pour organiser différents ensembles de mappages'
+      ],
+      notes: [
+        'HID Remapper nécessite un microcontrôleur compatible (Arduino Pro Micro, Leonardo, etc.)',
+        'L\'appareil apparaîtra comme un nouveau clavier/souris pour votre ordinateur',
+        'Vous pouvez avoir plusieurs couches de mappages pour différents cas d\'utilisation',
+        'Pour les utilisateurs avancés, vous pouvez créer des expressions et macros personnalisées'
+      ]
     }
   }
 }; 
