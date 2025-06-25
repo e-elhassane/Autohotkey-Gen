@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "React application to generate and download AutoHotkey scripts",
   "private": true,
-  "homepage": "https://e-elhassane.github.io/AHK-Macro-Generator/",
+  "homepage": "https://e-elhassane.github.io/AHK-Generator/",
+  "scripts": {
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+},
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -13,14 +19,8 @@
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
     "react-syntax-highlighter": "^15.6.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "PUBLIC_URL=https://e-elhassane.github.io/AHK-Macro-Generator react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    
+
   },
   "eslintConfig": {
     "extends": [
