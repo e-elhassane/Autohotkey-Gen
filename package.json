@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "React application to generate and download AutoHotkey scripts",
   "private": true,
-  "homepage": "https://e-elhassane.github.io/AHK-Generator/",
+  "homepage": "https://e-elhassane.github.io/Autohotkey-Generator",
   "scripts": {
   "start": "react-scripts start",
   "build": "react-scripts build",
