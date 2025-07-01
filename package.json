@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "React application to generate and download AutoHotkey scripts",
   "private": true,
-  "homepage": "https://e-elhassane.github.io/Autohotkey-Generator",
+  "homepage": "https://e-elhassane.github.io/Autohotkey-Gen",
   "scripts": {
-  "start": "react-scripts start",
-  "build": "react-scripts build",
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d build"
-},
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -19,8 +19,6 @@
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
     "react-syntax-highlighter": "^15.6.1"
-    
-
   },
   "eslintConfig": {
     "extends": [
