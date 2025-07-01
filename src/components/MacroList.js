@@ -50,10 +50,10 @@ function MacroList({ hotkeys, onDeleteHotkey, onDownload }) {
         return t('actions.volumeUp');
       case 'volumeDown':
         return t('actions.volumeDown');
-      case 'brightnessUp':
-        return t('actions.brightnessUp');
-      case 'brightnessDown':
-        return t('actions.brightnessDown');
+      case 'workspace':
+        return `${t('actions.workspace')}: ${action.path}`;
+      case 'openMultipleWebsites':
+        return `${t('actions.openMultipleWebsites')}: ${action.path}`;
       case 'quickNote':
         return t('actions.quickNote');
       case 'startTimer':
@@ -127,7 +127,10 @@ function MacroList({ hotkeys, onDeleteHotkey, onDownload }) {
   };
 
   const extractOriginalKey = (displayKey) => {
-    // Extrait la touche originale du format "A (KeyA)"
+    // Extrait la touche originale du format "A (KeyA)" ou "NUMPAD4"
+    if (displayKey.startsWith('NUMPAD')) {
+      return displayKey; // Pour les touches numpad, retourner directement
+    }
     const match = displayKey.match(/^([^ ]+)/);
     return match ? match[1] : displayKey;
   };
@@ -176,7 +179,42 @@ function MacroList({ hotkeys, onDeleteHotkey, onDownload }) {
         return '{Insert}';
       case 'F1': case 'F2': case 'F3': case 'F4': case 'F5': case 'F6':
       case 'F7': case 'F8': case 'F9': case 'F10': case 'F11': case 'F12':
-        return `{${key}}`;
+        return `${key}`;
+      // Numpad keys
+      case 'NUMPAD0': case 'NUMPAD 0': case 'NUM0':
+        return 'Numpad0';
+      case 'NUMPAD1': case 'NUMPAD 1': case 'NUM1':
+        return 'Numpad1';
+      case 'NUMPAD2': case 'NUMPAD 2': case 'NUM2':
+        return 'Numpad2';
+      case 'NUMPAD3': case 'NUMPAD 3': case 'NUM3':
+        return 'Numpad3';
+      case 'NUMPAD4': case 'NUMPAD 4': case 'NUM4':
+        return 'Numpad4';
+      case 'NUMPAD5': case 'NUMPAD 5': case 'NUM5':
+        return 'Numpad5';
+      case 'NUMPAD6': case 'NUMPAD 6': case 'NUM6':
+        return 'Numpad6';
+      case 'NUMPAD7': case 'NUMPAD 7': case 'NUM7':
+        return 'Numpad7';
+      case 'NUMPAD8': case 'NUMPAD 8': case 'NUM8':
+        return 'Numpad8';
+      case 'NUMPAD9': case 'NUMPAD 9': case 'NUM9':
+        return 'Numpad9';
+      case 'NUMPADMULTIPLY': case 'NUMPAD *': case 'NUM*':
+        return 'NumpadMult';
+      case 'NUMPADADD': case 'NUMPAD +': case 'NUM+':
+        return 'NumpadAdd';
+      case 'NUMPADSUBTRACT': case 'NUMPAD -': case 'NUM-':
+        return 'NumpadSub';
+      case 'NUMPADDECIMAL': case 'NUMPAD .': case 'NUM.':
+        return 'NumpadDot';
+      case 'NUMPADDIVIDE': case 'NUMPAD /': case 'NUM/':
+        return 'NumpadDiv';
+      case 'NUMPADENTER': case 'NUMPAD ENTER':
+        return 'NumpadEnter';
+      case 'NUMLOCK':
+        return 'NumLock';
       default:
         return key;
     }
@@ -206,11 +244,11 @@ function MacroList({ hotkeys, onDeleteHotkey, onDownload }) {
         case 'volumeDown':
           action = 'Send, {Volume_Down}';
           break;
-        case 'brightnessUp':
-          action = 'Run, nircmd.exe changesysvolume 2000';
+        case 'workspace':
+          action = `OpenWorkspace("${hotkey.action.path}")`;
           break;
-        case 'brightnessDown':
-          action = 'Run, nircmd.exe changesysvolume -2000';
+        case 'openMultipleWebsites':
+          action = `OpenMultipleWebsites("${hotkey.action.path}")`;
           break;
         case 'quickNote':
           action = 'QuickNote()';
@@ -264,6 +302,40 @@ function MacroList({ hotkeys, onDeleteHotkey, onDownload }) {
       'TimerDone:',
       '    SetTimer, TimerDone, Off',
       '    MsgBox Timer Done!',
+      '    return',
+      '}',
+      '',
+      'OpenWorkspace(workspaceConfig) {',
+      '    ; Parse workspace configuration (format: "app1.exe|folder1|app2.exe|folder2")',
+      '    Loop, Parse, workspaceConfig, |',
+      '    {',
+      '        item := A_LoopField',
+      '        if (SubStr(item, -3) = ".exe" || SubStr(item, -3) = ".lnk") {',
+      '            ; It\'s an application',
+      '            Run, %item%',
+      '            Sleep, 1000  ; Wait for app to start',
+      '        } else {',
+      '            ; It\'s a folder',
+      '            Run, explorer.exe "%item%"',
+      '            Sleep, 500   ; Wait for folder to open',
+      '        }',
+      '    }',
+      '    TrayTip, Workspace, Workspace opened successfully!, 2',
+      '    return',
+      '}',
+      '',
+      'OpenMultipleWebsites(websitesConfig) {',
+      '    ; Parse multiple websites configuration (format: "url1|url2|url3")',
+      '    Loop, Parse, websitesConfig, |',
+      '    {',
+      '        url := A_LoopField',
+      '        if (url != "") {',
+      '            ; Open website in default browser',
+      '            Run, %url%',
+      '            Sleep, 500  ; Small delay between opening websites',
+      '        }',
+      '    }',
+      '    TrayTip, Multiple Websites, Websites opened successfully!, 2',
       '    return',
       '}',
       '',

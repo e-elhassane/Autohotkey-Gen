@@ -27,6 +27,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Tooltip from '@mui/material/Tooltip';
 import { useLanguage } from '../contexts/LanguageContext';
 import MouseIcon from '@mui/icons-material/Mouse';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 // =============================
 // Définition du composant principal
@@ -40,12 +42,14 @@ function KeyRecorder({ onAddHotkey }) {
   const [isActionDialogOpen, setIsActionDialogOpen] = useState(false); // Dialogue d'action ouvert ?
   const [selectedAction, setSelectedAction] = useState(''); // Action sélectionnée
   const [actionPath, setActionPath] = useState(''); // Chemin ou paramètre de l'action
+  const [workspacePaths, setWorkspacePaths] = useState(['']); // Multiple paths for workspace
+  const [websiteUrls, setWebsiteUrls] = useState(['']); // Multiple URLs for websites
   const [replacementText, setReplacementText] = useState(''); // Texte de remplacement
   const [textToReplace, setTextToReplace] = useState(''); // Texte à remplacer
   const [hotkeyName, setHotkeyName] = useState(''); // Nom de la macro
 
   // Actions nécessitant un chemin/paramètre
-  const pathRequiredActions = ['openApp', 'openWebsite'];
+  const pathRequiredActions = ['openApp', 'openWebsite', 'workspace', 'openMultipleWebsites'];
 
   // =============================
   // Effet pour enregistrer les touches clavier
@@ -55,17 +59,29 @@ function KeyRecorder({ onAddHotkey }) {
       if (!isRecording) return;
       // Empêche le comportement par défaut du navigateur
       e.preventDefault();
-      const key = e.key.toUpperCase();
+      
       const modifiers = [];
       // Ajout des modificateurs
-      if (e.ctrlKey && key !== 'CONTROL') modifiers.push('Ctrl');
-      if (e.altKey && key !== 'ALT') modifiers.push('Alt');
-      if (e.shiftKey && key !== 'SHIFT') modifiers.push('Shift');
-      if (e.metaKey && key !== 'META') modifiers.push('Win');
-      // Affichage de la touche pressée
-      const displayKey = key === 'CONTROL' || key === 'ALT' || key === 'SHIFT' || key === 'META' 
-        ? key 
-        : `${key} (${e.code})`;
+      if (e.ctrlKey && e.key.toUpperCase() !== 'CONTROL') modifiers.push('Ctrl');
+      if (e.altKey && e.key.toUpperCase() !== 'ALT') modifiers.push('Alt');
+      if (e.shiftKey && e.key.toUpperCase() !== 'SHIFT') modifiers.push('Shift');
+      if (e.metaKey && e.key.toUpperCase() !== 'META') modifiers.push('Win');
+      
+      // Gestion spéciale pour les touches numpad
+      let displayKey;
+      if (e.code.startsWith('Numpad')) {
+        // Pour les touches numpad, utiliser le code complet
+        const numpadKey = e.code.replace('Numpad', 'NUMPAD');
+        displayKey = numpadKey;
+      } else if (e.key.toUpperCase() === 'CONTROL' || e.key.toUpperCase() === 'ALT' || 
+                 e.key.toUpperCase() === 'SHIFT' || e.key.toUpperCase() === 'META') {
+        // Pour les modificateurs, utiliser la touche
+        displayKey = e.key.toUpperCase();
+      } else {
+        // Pour les autres touches, utiliser le format standard
+        displayKey = `${e.key.toUpperCase()} (${e.code})`;
+      }
+      
       setRecordedKeys([...modifiers, displayKey]);
     };
     // Ajout/suppression de l'écouteur d'événement
@@ -95,6 +111,42 @@ function KeyRecorder({ onAddHotkey }) {
   };
 
   // =============================
+  // Gestion des chemins workspace
+  // =============================
+  const addWorkspacePath = () => {
+    setWorkspacePaths([...workspacePaths, '']);
+  };
+
+  const removeWorkspacePath = (index) => {
+    const newPaths = workspacePaths.filter((_, i) => i !== index);
+    setWorkspacePaths(newPaths);
+  };
+
+  const updateWorkspacePath = (index, value) => {
+    const newPaths = [...workspacePaths];
+    newPaths[index] = value;
+    setWorkspacePaths(newPaths);
+  };
+
+  // =============================
+  // Gestion des URLs de sites web
+  // =============================
+  const addWebsiteUrl = () => {
+    setWebsiteUrls([...websiteUrls, '']);
+  };
+
+  const removeWebsiteUrl = (index) => {
+    const newUrls = websiteUrls.filter((_, i) => i !== index);
+    setWebsiteUrls(newUrls);
+  };
+
+  const updateWebsiteUrl = (index, value) => {
+    const newUrls = [...websiteUrls];
+    newUrls[index] = value;
+    setWebsiteUrls(newUrls);
+  };
+
+  // =============================
   // Sauvegarder la macro créée
   // =============================
   const handleSaveHotkey = () => {
@@ -109,6 +161,30 @@ function KeyRecorder({ onAddHotkey }) {
           type: selectedAction,
           path: textToReplace,
           replacement: replacementText
+        }
+      };
+    } else if (selectedAction === 'workspace') {
+      // Cas workspace avec chemins multiples
+      const validPaths = workspacePaths.filter(path => path.trim() !== '');
+      if (validPaths.length === 0) return;
+      hotkey = {
+        name: hotkeyName,
+        keys: recordedKeys,
+        action: {
+          type: selectedAction,
+          path: validPaths.join('|')
+        }
+      };
+    } else if (selectedAction === 'openMultipleWebsites') {
+      // Cas sites web multiples
+      const validUrls = websiteUrls.filter(url => url.trim() !== '');
+      if (validUrls.length === 0) return;
+      hotkey = {
+        name: hotkeyName,
+        keys: recordedKeys,
+        action: {
+          type: selectedAction,
+          path: validUrls.join('|')
         }
       };
     } else {
@@ -128,6 +204,8 @@ function KeyRecorder({ onAddHotkey }) {
     setIsActionDialogOpen(false);
     setSelectedAction('');
     setActionPath('');
+    setWorkspacePaths(['']);
+    setWebsiteUrls(['']);
     setReplacementText('');
     setTextToReplace('');
     setHotkeyName('');
@@ -167,8 +245,8 @@ function KeyRecorder({ onAddHotkey }) {
             <MenuItem value="replaceText">{t('actionTypes.replaceText')}</MenuItem>
             <MenuItem value="volumeUp">{t('actionTypes.volumeUp')}</MenuItem>
             <MenuItem value="volumeDown">{t('actionTypes.volumeDown')}</MenuItem>
-            <MenuItem value="brightnessUp">{t('actionTypes.brightnessUp')}</MenuItem>
-            <MenuItem value="brightnessDown">{t('actionTypes.brightnessDown')}</MenuItem>
+            <MenuItem value="workspace">{t('actionTypes.workspace')}</MenuItem>
+            <MenuItem value="openMultipleWebsites">{t('actionTypes.openMultipleWebsites')}</MenuItem>
             <MenuItem value="quickNote">{t('actionTypes.quickNote')}</MenuItem>
             <MenuItem value="startTimer">{t('actionTypes.startTimer')}</MenuItem>
             <MenuItem value="clipboardHistory">{t('actionTypes.clipboardHistory')}</MenuItem>
@@ -288,13 +366,97 @@ function KeyRecorder({ onAddHotkey }) {
                   rows={4}
                 />
               </>
+            ) : selectedAction === 'workspace' ? (
+              <Box>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  {t('workspaceHelper')}
+                </Typography>
+                {workspacePaths.map((path, index) => (
+                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <TextField
+                      label={`${t('path')} ${index + 1}`}
+                      fullWidth
+                      value={path}
+                      onChange={(e) => updateWorkspacePath(index, e.target.value)}
+                      placeholder={t('workspacePlaceholder')}
+                      sx={{ mr: 1 }}
+                    />
+                    {workspacePaths.length > 1 && (
+                      <IconButton
+                        onClick={() => removeWorkspacePath(index)}
+                        color="error"
+                        size="small"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                ))}
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={addWorkspacePath}
+                  variant="outlined"
+                  size="small"
+                >
+                  {t('addPath')}
+                </Button>
+              </Box>
+            ) : selectedAction === 'openMultipleWebsites' ? (
+              <Box>
+                <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+                  {t('multipleWebsitesHelper')}
+                </Typography>
+                {websiteUrls.map((url, index) => (
+                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                    <TextField
+                      label={`Website ${index + 1}`}
+                      fullWidth
+                      value={url}
+                      onChange={(e) => updateWebsiteUrl(index, e.target.value)}
+                      placeholder={t('multipleWebsitesPlaceholder')}
+                      sx={{ mr: 1 }}
+                    />
+                    {websiteUrls.length > 1 && (
+                      <IconButton
+                        onClick={() => removeWebsiteUrl(index)}
+                        color="error"
+                        size="small"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    )}
+                  </Box>
+                ))}
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={addWebsiteUrl}
+                  variant="outlined"
+                  size="small"
+                >
+                  {t('addPath')}
+                </Button>
+              </Box>
             ) : pathRequiredActions.includes(selectedAction) ? (
               <TextField
-                label={selectedAction === 'openWebsite' ? 'URL' : t('path')}
+                label={
+                  selectedAction === 'openWebsite' ? 'URL' : 
+                  selectedAction === 'createFiles' ? 'File/Folder Creation Configuration' :
+                  t('path')
+                }
                 fullWidth
                 value={actionPath}
                 onChange={(e) => setActionPath(e.target.value)}
-                placeholder={t('pathPlaceholder')}
+                placeholder={
+                  selectedAction === 'openWebsite' ? 'https://example.com' :
+                  selectedAction === 'createFiles' ? t('createFilesPlaceholder') :
+                  t('pathPlaceholder')
+                }
+                multiline={selectedAction === 'createFiles'}
+                rows={selectedAction === 'createFiles' ? 3 : 1}
+                helperText={
+                  selectedAction === 'createFiles' ? t('createFilesHelper') :
+                  ''
+                }
               />
             ) : null}
           </Box>
@@ -306,9 +468,13 @@ function KeyRecorder({ onAddHotkey }) {
           <Button 
             onClick={handleSaveHotkey} 
             variant="contained"
-            disabled={!hotkeyName || (selectedAction === 'replaceText' ? 
-              (!textToReplace || !replacementText) : 
-              (pathRequiredActions.includes(selectedAction) ? !actionPath : false))}
+            disabled={
+              !hotkeyName || 
+              (selectedAction === 'replaceText' ? (!textToReplace || !replacementText) : false) ||
+              (selectedAction === 'workspace' ? (workspacePaths.filter(path => path.trim() !== '').length === 0) : false) ||
+              (selectedAction === 'openMultipleWebsites' ? (websiteUrls.filter(url => url.trim() !== '').length === 0) : false) ||
+              (pathRequiredActions.includes(selectedAction) && selectedAction !== 'workspace' && selectedAction !== 'openMultipleWebsites' ? !actionPath : false)
+            }
           >
             {t('save')}
           </Button>
