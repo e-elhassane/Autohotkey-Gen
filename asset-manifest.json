@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Autohotkey-Gen/static/css/main.e6c13ad2.css",
+    "main.js": "/Autohotkey-Gen/static/js/main.6ef995d4.js",
+    "index.html": "/Autohotkey-Gen/index.html",
+    "main.e6c13ad2.css.map": "/Autohotkey-Gen/static/css/main.e6c13ad2.css.map",
+    "main.6ef995d4.js.map": "/Autohotkey-Gen/static/js/main.6ef995d4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.6ef995d4.js"
+  ]
+}
